@@ -1,3 +1,4 @@
 # NetOpt
 
-NetOpt is a network optimization framework for link state, SDN and SR routing.
+NetOpt is a network optimization framework for Link State, SDN and SR routing.
+

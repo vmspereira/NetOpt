@@ -27,8 +27,6 @@ import pt.uminho.algoritmi.netopt.ospf.simulation.Demands;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkTopology;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Simul;
-import pt.uminho.algoritmi.netopt.ospf.simulation.simulators.SRSimul;
-
 import java.util.HashMap;
 import java.util.List;
 

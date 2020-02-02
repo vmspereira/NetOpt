@@ -265,6 +265,10 @@ public class SRSimulator {
 	public double getUsage(int from, int to) {
 		return this.loads[from][to] / topology.getNetGraph().getEdge(from, to).getBandwidth();
 	}
+	
+	public double getDelayCost(int from, int to) {
+		return this.loads[from][to] / (topology.getNetGraph().getEdge(from, to).getBandwidth()-this.loads[from][to]);
+	}
 
 	public double getLoad(int from, int to) {
 		return this.loads[from][to];
@@ -285,6 +289,8 @@ public class SRSimulator {
 		}
 		return l;
 	}
+	
+	
 	
 	/**
 	 * Clear loads and remove all configured flows
@@ -600,6 +606,23 @@ public class SRSimulator {
 		}
 		return res;
 	}
+	
+	
+	public double getAverageDelay() {
+		double sum = 0.0;
+		int count =0;
+		for (int i = 0; i < topology.getDimension(); i++) {
+			for (int j = 0; j < topology.getDimension(); j++) {
+				if(topology.getNetGraph().existEdge(i, j) && topology.getNetGraph().getEdge(i, j).isUP()){
+					sum += getDelayCost(i,j);
+					count++;
+				}
+			}
+		}
+		return sum/count;
+	}
+	
+	
 
 	public OSPFWeights getWeights() {
 		return this.weights;
@@ -643,9 +666,7 @@ public class SRSimulator {
 			for(int j=0;j<d.length;j++)
 				System.out.print(d[i][j]+";");
 			System.out.println();
-		}
-		
-		
+		}	
 	}
 	
 	
@@ -673,6 +694,8 @@ public class SRSimulator {
 	
 		
 	}
+	
+	
 	
 	
 	

@@ -221,15 +221,10 @@ public class NetworkLoads extends ResultSimul implements Serializable
 		 */
 		
 		double res =0.0;
-		double m=0.0;
-		double s=0.0;
 		for(int i=0;i<u.length;i++)
 			for(int j=0;j<u.length;j++){
 				
 		}
-		
-		
-		
 		return res;
 	}
 	

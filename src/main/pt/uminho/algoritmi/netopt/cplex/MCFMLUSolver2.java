@@ -27,11 +27,6 @@ import pt.uminho.algoritmi.netopt.ospf.simulation.Demands;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkTopology;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Simul;
-import pt.uminho.algoritmi.netopt.ospf.simulation.simulators.SRSimul;
-
-import java.util.HashMap;
-import java.util.List;
-
 import ilog.concert.*;
 
 public class MCFMLUSolver2 {
@@ -84,7 +79,6 @@ public class MCFMLUSolver2 {
 		Arcs arcs = new Arcs();
 		// number of nodes
 		int n = capacity.length;
-		int k = 0; // just for naming
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
 				if (capacity[i][j] > 0) {
