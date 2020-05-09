@@ -26,13 +26,12 @@ import jecoli.algorithm.components.representation.linear.ILinearRepresentation;
 import pt.uminho.algoritmi.netopt.cplex.SRLoadBalancingPhiSolver;
 import pt.uminho.algoritmi.netopt.cplex.SRLoadBalancingSolver;
 import pt.uminho.algoritmi.netopt.ospf.simulation.Demands;
-import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkLoads;
 import pt.uminho.algoritmi.netopt.ospf.simulation.NetworkTopology;
 import pt.uminho.algoritmi.netopt.ospf.simulation.OSPFWeights;
 import pt.uminho.algoritmi.netopt.ospf.simulation.simulators.SRSimul;
 import pt.uminho.algoritmi.netopt.ospf.simulation.sr.SRConfiguration;
 
-public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFunction<ILinearRepresentation<Integer>> {
+public class SRIntegerEvaluation2DMOLP extends AbstractMultiobjectiveEvaluationFunction<ILinearRepresentation<Integer>> {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -43,16 +42,15 @@ public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFun
 	private Objective objective;
 	
 	public enum Objective{
-		BOTH,
 		MLU,
 		PHI;
 	};
 
-	public SRIntegerEvaluationMOLP(NetworkTopology topology, Demands[] demands) {
-		this(topology, demands, Objective.BOTH);
+	public SRIntegerEvaluation2DMOLP(NetworkTopology topology, Demands[] demands) {
+		this(topology, demands, Objective.PHI);
 	}
 
-	public SRIntegerEvaluationMOLP(NetworkTopology topology, Demands[] demands, Objective obj) {
+	public SRIntegerEvaluation2DMOLP(NetworkTopology topology, Demands[] demands, Objective obj) {
 		super(false);
 		this.topology = topology;
 		this.demands = demands;
@@ -82,8 +80,6 @@ public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFun
 	}
 
 	protected Double[] evalWeightsMO(int[] weights) throws Exception {
-		double congestion = Double.MAX_VALUE;
-		double mlu = Double.MAX_VALUE;
 		Double[] fitness = new Double[2];
 		fitness[0]=Double.MAX_VALUE; fitness[1]=Double.MAX_VALUE;
 		topology.applyWeights(weights);
@@ -94,38 +90,35 @@ public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFun
 		OSPFWeights w = new OSPFWeights(topology.getDimension());
 		w.setWeights(weights, topology);
 		if(this.objective.equals(Objective.PHI)){
+			double res1 = Double.MAX_VALUE;
+			double res2 = Double.MAX_VALUE;
 			SRLoadBalancingPhiSolver phisolver = new SRLoadBalancingPhiSolver(topology, w, config, demands[0]);
 			phisolver.setSaveLoads(true);
 			phisolver.optimize();
-			NetworkLoads loads = phisolver.getNetworLoads();
 			if(phisolver.hasSolution()){
-				congestion=simul.congestionMeasure(loads, demands[0]);		
-				fitness[0] = congestion;
-				fitness[1] = loads.getMLU();
+				res1=simul.congestionMeasure(phisolver.getNetworLoads(), demands[0]);		
 			}
-		}
-		else if(this.objective.equals(Objective.MLU)){
-			SRLoadBalancingSolver mlusolver = new SRLoadBalancingSolver(topology, w, config, demands[0]);
-			mlusolver.setSaveLoads(true);
-			mlu = mlusolver.optimize();
-			if(mlusolver.hasSolution()){
-				congestion=simul.congestionMeasure(mlusolver.getNetworLoads(), demands[0]);		
-				fitness[0] = congestion;
-				fitness[1] = mlu;
-			}
-		}else{
-			SRLoadBalancingPhiSolver phisolver = new SRLoadBalancingPhiSolver(topology, w, config, demands[0]);
+			
+			phisolver = new SRLoadBalancingPhiSolver(topology, w, config, demands[1]);
 			phisolver.setSaveLoads(true);
+			phisolver.optimize();
 			if(phisolver.hasSolution()){
-				congestion=simul.congestionMeasure(phisolver.getNetworLoads(), demands[0]);		
-				fitness[0] = congestion;
+				res2=simul.congestionMeasure(phisolver.getNetworLoads(), demands[1]);		
 			}
-			SRLoadBalancingSolver mlusolver = new SRLoadBalancingSolver(topology, w, config, demands[0]);
-			mlusolver.setSaveLoads(true);
-			mlu = mlusolver.optimize();
-			if(mlusolver.hasSolution()){
-				fitness[1] = mlu;
-			}
+			fitness[0] = res1;
+			fitness[1] = res2;
+			
+		}
+		else{
+			
+			double res1 = Double.MAX_VALUE;
+			double res2 = Double.MAX_VALUE;
+			SRLoadBalancingSolver solver = new SRLoadBalancingSolver(topology, w, config, demands[0]);
+			res1 =solver.optimize();
+			solver = new SRLoadBalancingSolver(topology, w, config, demands[1]);
+			res2= solver.optimize();
+			fitness[0] = res1;
+			fitness[1] = res2;			
 		}
 		
 		return fitness;
@@ -142,7 +135,7 @@ public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFun
 		Demands[] d = new Demands[demands.length];
 		for(int i=0; i<demands.length;i++)
 			d[i]=demands[i].copy();
-		return new SRIntegerEvaluationMOLP(this.topology.copy(),d);
+		return new SRIntegerEvaluation2DMOLP(this.topology.copy(),d);
 	}
 
 	@Override
