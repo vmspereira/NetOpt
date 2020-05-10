@@ -88,6 +88,7 @@ import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.ospf.OSPFL
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.ospf.OSPFMultiLayerIntegerEvaluation;
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.sr.ConstrainedSRMultiLayerEvaluation;
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.sr.SRIntegerEvaluation;
+import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.sr.SRIntegerEvaluation2DMOLP;
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.sr.SRIntegerEvaluationMO;
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.sr.SRIntegerEvaluationMOLP;
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.evaluation.sr.SRLinkFailureEvaluation;
@@ -810,6 +811,24 @@ public class JecoliOSPF {
 
 		algorithm = new OSPFNSGAII(configuration);
 	}
+
+	
+	
+	public void configureSRNSGAIILP(Params params) throws Exception, InvalidConfigurationException {
+
+		NSGAIIConfiguration<ILinearRepresentation<Integer>, ILinearRepresentationFactory<Integer>> configuration = this
+				.preConfigureNSGAII(params);
+
+		if (params.getSecondObjective() == AlgorithmSecondObjective.DEMANDS) {
+			SRIntegerEvaluation2DMOLP ospfEvaluation = new SRIntegerEvaluation2DMOLP(topology, demands);
+			configuration.setEvaluationFunction(ospfEvaluation);	
+		}else {
+			SRIntegerEvaluationMOLP ospfEvaluation = new SRIntegerEvaluationMOLP(topology, demands);
+			configuration.setEvaluationFunction(ospfEvaluation);
+		}
+		algorithm = new OSPFNSGAII(configuration);
+	}
+
 	
 	
 	

@@ -102,7 +102,6 @@ public class SRLoadBalancingPhiSolver {
 
 	private double optimize(NetworkTopology topology, Demands demands, OSPFWeights weights, SRConfiguration srConf)
 			throws IloException, DimensionErrorException {
-		System.out.println("Optimizing Phi");
 		// containers
 		double[][] capacity = topology.getNetGraph().createGraph().getCapacitie();
 		HashMap<SourceDestinationPair, List<PathConfiguration>> paths = new HashMap<SourceDestinationPair, List<PathConfiguration>>();

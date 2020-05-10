@@ -348,11 +348,6 @@ public class SRSimulator {
 	 */
 	public void apply(SRConfiguration conf, Demands demands) {
 
-	//	try {
-	//		topology.applyWeights(weights);
-	//	} catch (DimensionErrorException e1) {
-	//		e1.printStackTrace();
-	//	}
 		Collection<SRNodeConfiguration> n = conf.getNodesConfigurations();
 		for (SRNodeConfiguration nc : n) {
 			Collection<ArrayList<LabelPath>> u = nc.getConfiguration().values();
@@ -374,16 +369,6 @@ public class SRSimulator {
 				}
 			}
 		}
-		////////////////////////////////////
-		//print(this.getLoads());
-		//try {
-		//	SRSimul s = new SRSimul(this.topology.copy(),true);
-		//	double[][] l2 =s.totalLoads(demands, weights, conf, true);
-		//	print(l2);
-		//} catch (DimensionErrorException e) {
-			// TODO Auto-generated catch block
-		//	e.printStackTrace();
-		//}
 	}
 
 	
@@ -697,6 +682,14 @@ public class SRSimulator {
 	
 	
 	
+	public SRConfiguration getCurrentConfiguration(){
+		SRConfiguration conf = new SRConfiguration();
+		Iterator<LabelPath> it = flowPath.values().iterator();
+		while(it.hasNext()){
+			conf.addLabelPath(it.next());
+		}
+		return conf;
+	}
 	
 	
 	

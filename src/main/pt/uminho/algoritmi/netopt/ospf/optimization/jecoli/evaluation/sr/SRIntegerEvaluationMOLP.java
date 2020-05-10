@@ -49,7 +49,7 @@ public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFun
 	};
 
 	public SRIntegerEvaluationMOLP(NetworkTopology topology, Demands[] demands) {
-		this(topology, demands, Objective.BOTH);
+		this(topology, demands, Objective.PHI);
 	}
 
 	public SRIntegerEvaluationMOLP(NetworkTopology topology, Demands[] demands, Objective obj) {
@@ -108,24 +108,19 @@ public class SRIntegerEvaluationMOLP extends AbstractMultiobjectiveEvaluationFun
 			SRLoadBalancingSolver mlusolver = new SRLoadBalancingSolver(topology, w, config, demands[0]);
 			mlusolver.setSaveLoads(true);
 			mlu = mlusolver.optimize();
-			if(mlusolver.hasSolution()){
-				congestion=simul.congestionMeasure(mlusolver.getNetworLoads(), demands[0]);		
-				fitness[0] = congestion;
-				fitness[1] = mlu;
-			}
+			congestion=simul.congestionMeasure(mlusolver.getNetworLoads(), demands[0]);		
+			fitness[0] = congestion;
+			fitness[1] = mlu;
+			
 		}else{
 			SRLoadBalancingPhiSolver phisolver = new SRLoadBalancingPhiSolver(topology, w, config, demands[0]);
 			phisolver.setSaveLoads(true);
-			if(phisolver.hasSolution()){
-				congestion=simul.congestionMeasure(phisolver.getNetworLoads(), demands[0]);		
-				fitness[0] = congestion;
-			}
+			phisolver.optimize();
+			congestion=simul.congestionMeasure(phisolver.getNetworLoads(), demands[0]);		
 			SRLoadBalancingSolver mlusolver = new SRLoadBalancingSolver(topology, w, config, demands[0]);
-			mlusolver.setSaveLoads(true);
 			mlu = mlusolver.optimize();
-			if(mlusolver.hasSolution()){
-				fitness[1] = mlu;
-			}
+			fitness[0] = congestion;
+			fitness[1] = mlu;
 		}
 		
 		return fitness;
