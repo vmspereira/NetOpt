@@ -69,7 +69,7 @@ import pt.uminho.algoritmi.netopt.ospf.simulation.sr.SRConfiguration.SRConfigura
 public class NetOPT {
 
 	public enum Method {
-		MULTI_TOPOLOGY,SRMTLFC,LINK_FAILURE, TWO_DEMANDS, DEMAND_DELAY, SR_LINK_FAILURE, SR_LINK_FAILURE_MO, HYBRID_SDN_IP, SRMTLF
+		MULTI_TOPOLOGY,SRMTLFC,LINK_FAILURE, TWO_DEMANDS, DEMAND_DELAY, SR_LINK_FAILURE, SR_LINK_FAILURE_MO, HYBRID_SDN_IP, SRMTLF,SRMD
 	}
 
 	public enum Algorithm {
@@ -115,15 +115,16 @@ public class NetOPT {
 			+ "NetOPT m:<method> o:<algorithm> n:<nodes file> e:<edges file> [options]\n"
 
 			+ "Methods: \n" 
-			+ "  lf		link failure\n" 
-			+ "  mt		multi topology\n" 
-			+ "  2d		two demands\n"
-			+ "  dd		demands and delay\n" 
+			+ "  lf		OSPF link failure\n" 
+			+ "  mt		OSPF multi topology\n" 
+			+ "  2d		OSPF two demands\n"
+			+ "  dd		OSPF demands and delay\n" 
+			+ "  hsdn  	Hybrid SDN/IP\n"
 			+ "  srlf  	SR Link Failure\n" 
 			+ "  srlfmo	SR Link Failure MO\n"
-			+ "  sralf 	SR all LF\n" 
-			+ "  hsdn  	Hybrid SDN/IP\n"
-			+ "  tm		multi demands optimization\n"
+			+ "  srmt		SR Link Failure Multiplane\n"
+			+ "  srmtc		SR Link Failure Constrainted Multiplane\n"	
+			+ "  srmd		SR multi demands optimization\n"
 			+ "\n"
 			+ "Options:\n"
 			+ "  o:[so|spea2|nsgaii]		EA algorithm\n"
@@ -192,6 +193,9 @@ public class NetOPT {
 		case SRMTLFC:
 			executeCSRMTLinkFailure();
 			return;		
+		case SRMD:
+			executeSRMD();
+			return;
 		default:
 			System.exit(0);
 		}
@@ -1262,6 +1266,17 @@ public class NetOPT {
 
 	}
 
+	
+	private void executeSRMD(){
+		SRMD t = new SRMD(topology, 0.27, nodesFile);
+		try {
+			t.run();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private NetworkTopology getTopology() {
 		NetworkTopology topology = null;
 		try {
@@ -1338,6 +1353,8 @@ public class NetOPT {
 					this.setMethod(Method.SRMTLFC);
 				else if (m.equals("hsdn"))
 					this.setMethod(Method.HYBRID_SDN_IP);
+				else if (m.equals("srmd"))
+					this.setMethod(Method.SRMD);
 				else {
 					System.out.println("Invalid method: " + m);
 					System.exit(0);

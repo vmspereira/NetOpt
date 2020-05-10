@@ -17,7 +17,7 @@
  *  
  *  @author Vítor Pereira
  ******************************************************************************/
-package pt.uminho.algoritmi.netopt.tests;
+package pt.uminho.algoritmi.netopt;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -31,7 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jecoli.algorithm.components.configuration.InvalidConfigurationException;
-import pt.uminho.algoritmi.netopt.SystemConf;
 import pt.uminho.algoritmi.netopt.ospf.optimization.Params;
 import pt.uminho.algoritmi.netopt.ospf.optimization.Params.AlgorithmSecondObjective;
 import pt.uminho.algoritmi.netopt.ospf.optimization.jecoli.JecoliOSPF;
@@ -47,7 +46,7 @@ import pt.uminho.algoritmi.netopt.ospf.simulation.exception.DimensionErrorExcept
 import pt.uminho.algoritmi.netopt.ospf.simulation.simulators.PDEFTSimul;
 import pt.uminho.algoritmi.netopt.ospf.simulation.solution.IntegerSolution;
 
-public class MOSROptimizationTest2 {
+public class SRMD {
 
 	/*
 	 * private static String nodesFile =
@@ -66,7 +65,7 @@ public class MOSROptimizationTest2 {
 	private final int WEIGHTS_ITERATIONS = 2000;
 	private final int P_ITERATIONS = 300;
 	private final double AMP = 0.08;
-	private static final Logger LOGGER = Logger.getLogger( MOSROptimizationTest2.class.getName() );
+	private static final Logger LOGGER = Logger.getLogger( SRMD.class.getName() );
 
 	public static void main(String[] args) {
 
@@ -87,7 +86,7 @@ public class MOSROptimizationTest2 {
 
 		try {
 			NetworkTopology topology = new NetworkTopology(nodesFile, edgesFile);
-			MOSROptimizationTest2 t = new MOSROptimizationTest2(topology, factor, nodesFile);
+			SRMD t = new SRMD(topology, factor, nodesFile);
 			t.run();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -96,7 +95,7 @@ public class MOSROptimizationTest2 {
 
 	}
 
-	public MOSROptimizationTest2(NetworkTopology topology, double factor, String id) {
+	public SRMD(NetworkTopology topology, double factor, String id) {
 		this.topology = topology;
 		this.factor = factor;
 		this.id = id;
