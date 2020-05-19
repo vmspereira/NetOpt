@@ -343,6 +343,7 @@ public class SRLoadBalancingSolver {
 			}
 		}
 		cplex.end();
+		cplex.close();
 		return res;
 	}
 	

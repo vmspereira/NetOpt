@@ -197,6 +197,7 @@ public class MCFMLUSolver {
 		
 		
 		cplex.end();
+		cplex.close();
 		return res;
 	}
 

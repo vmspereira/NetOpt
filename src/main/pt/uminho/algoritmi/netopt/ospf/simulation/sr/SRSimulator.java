@@ -226,19 +226,16 @@ public class SRSimulator {
 					// for each arc leaving from this node
 					for (int w = 0; w < topology.getDimension(); w++) {
 						if (topology.getNetGraph().existEdge(v, w) && topology.getNetGraph().getEdge(v, w).isUP()) {
-							l[v][w] = lb.getSplitRatio(v, dest, v, w) * sum;
+							if(flow.isAggregated())
+								l[v][w] = lb.getSplitRatio(v, dest, v, w) * sum;
+							else
+								l[v][w] = lb.getSplitRatio(flow, v, w)* sum;
 						}
 					}
 					nodes.remove(0);
 				}
 			}
 		}
-//		for(int i=0;i<l.length;i++){
-//			for(int j=0;j<l.length;j++)
-//				if(l[i][j]!=0)
-//				System.out.print(" ["+i+"->"+j+"]="+l[i][j]);
-//		}
-//		System.out.println();
 		return l;
 	}
 

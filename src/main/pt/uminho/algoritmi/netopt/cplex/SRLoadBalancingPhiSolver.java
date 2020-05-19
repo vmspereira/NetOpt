@@ -360,6 +360,7 @@ public class SRLoadBalancingPhiSolver {
 				}
 		}
 		cplex.end();
+		cplex.close();
 		return res;
 	}
 

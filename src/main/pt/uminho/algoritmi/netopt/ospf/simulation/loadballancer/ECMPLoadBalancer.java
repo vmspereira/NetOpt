@@ -20,6 +20,7 @@
 package pt.uminho.algoritmi.netopt.ospf.simulation.loadballancer;
 
 import pt.uminho.algoritmi.netopt.ospf.graph.Graph;
+import pt.uminho.algoritmi.netopt.ospf.simulation.sr.Flow;
 
 public class ECMPLoadBalancer implements ILoadBalancer {
 
@@ -41,6 +42,20 @@ public class ECMPLoadBalancer implements ILoadBalancer {
 	public double getSplitRatio(int flowSrc, int flowDst, int currentNode, int nextNode) {
 		if(g.getConnection(currentNode,nextNode).equals(Graph.Status.UP))
 			return (double) 1/g.outDegree(currentNode);
+		else 
+			return 0;
+	}
+	
+	
+	
+	public double getSplitRatio(Flow f, int currentNode, int nextNode) {
+		if(g.getConnection(currentNode,nextNode).equals(Graph.Status.UP)) {
+			int i = f.hashCode()%g.outDegree(currentNode);
+			if(g.outNodes(currentNode).get(i)==nextNode)
+				return 1;
+			else
+				return 0;
+		}
 		else 
 			return 0;
 	}

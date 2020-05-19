@@ -240,6 +240,7 @@ public class MCFPhiSolver {
 		}
 		
 		cplex.end();
+		cplex.close();
 		return res;
 	}
 

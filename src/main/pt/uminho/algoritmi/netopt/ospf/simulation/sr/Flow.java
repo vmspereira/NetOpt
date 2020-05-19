@@ -30,7 +30,7 @@ public class Flow implements Serializable{
 	
 	public static enum FlowType {
 
-		SALP("SAPL"), USER("USER"), TILFA("TI-FLA"),E2E("E2E");
+		SALP("SAPL"), USER("USER"), TILFA("TI-FLA"),E2E("E2E"), NFV("NFV");
 
 		private final String name;
 
